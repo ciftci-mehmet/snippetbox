@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 	"text/template"
+
+	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 )
 
 // home handler
@@ -47,8 +50,19 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// display snippet with id from parameter
-	fmt.Fprintf(w, "Display snippet with id: %d", id)
+	// get data from snippet model object
+	s, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	// display snippet data
+	fmt.Fprintf(w, "%v", s)
 }
 
 // createSnippet handler
@@ -61,5 +75,18 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Create a new snippet"))
+	// dummy data for test
+	title := "O snail"
+	content := "O snail\nClimb Mount Fuji,\nBuy slowly, slowly!\n\n - Kobayashi Issa"
+	expires := "7"
+
+	id, err := app.snippets.Insert(title, content, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	// redirect user to the created snippet
+	http.Redirect(w, r, fmt.Sprintf("/snippet?id=%d", id), http.StatusSeeOther)
+	// w.Write([]byte("Create a new snippet"))
 }
