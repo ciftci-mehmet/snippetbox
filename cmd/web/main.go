@@ -24,7 +24,7 @@ func main() {
 	// command line flag addr, default value :4000
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	// command line flag dsn, mysql dsn string
-	dsn := flag.String("dsn", "web:pass1word@/snippetbox?parseTime=true", "MySQL data source name")
+	dsn := flag.String("dsn", "web:pass1word@tcp(localhost:33066)/snippetbox?parseTime=true", "MySQL data source name")
 	// parse command line flag
 	flag.Parse()
 
