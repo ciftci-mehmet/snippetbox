@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"time"
 )
 
 // serverError helper writes error log then sends 500 response to the user
@@ -32,9 +34,25 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 		return
 	}
 
-	// execute the template set, passing in any dynamic data
-	err := ts.Execute(w, td)
+	// init new buffer
+	buf := new(bytes.Buffer)
+
+	// write template to buffer
+	err := ts.Execute(buf, app.addDefaultData(td, r))
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
+
+	// write contents of the buffer to the response
+	buf.WriteTo(w)
+}
+
+// takes a pointer to a  templateData struct, adds current year, then returns the pointer
+func (app *application) addDefaultData(td *templateData, r *http.Request) *templateData {
+	if td == nil {
+		td = &templateData{}
+	}
+	td.CurrentYear = time.Now().Year()
+	return td
 }

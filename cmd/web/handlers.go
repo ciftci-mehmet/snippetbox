@@ -74,29 +74,6 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// // create a templatedata holding snippet data
-	// data := &templateData{Snippet: s}
-
-	// // init slice containing paths to file
-	// files := []string{
-	// 	"./ui/html/show.page.tmpl",
-	// 	"./ui/html/base.layout.tmpl",
-	// 	"./ui/html/footer.partial.tmpl",
-	// }
-
-	// // parse template files
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
-
-	// // execute template
-	// err = ts.Execute(w, data)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// }
-
 	app.render(w, r, "show.page.tmpl", &templateData{
 		Snippet: s,
 	})
