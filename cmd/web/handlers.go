@@ -24,29 +24,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// // create a templatedata holding snippets data
-	// data := &templateData{Snippets: s}
-
-	// // init tmpl files
-	// files := []string{
-	// 	"./ui/html/home.page.tmpl",
-	// 	"./ui/html/base.layout.tmpl",
-	// 	"./ui/html/footer.partial.tmpl",
-	// }
-
-	// // parse template files
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
-
-	// // execute template
-	// err = ts.Execute(w, data)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// }
-
 	// render using new method
 	app.render(w, r, "home.page.tmpl", &templateData{
 		Snippets: s,
