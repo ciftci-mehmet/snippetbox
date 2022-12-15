@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 )
@@ -52,17 +54,54 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 
 // createSnippetForm handler
 func (app *application) createSnippetForm(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Create new snippet..."))
+	app.render(w, r, "create.page.tmpl", nil)
 }
 
 // createSnippet handler
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
+	// parse for post body
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 
-	// dummy data for test
-	title := "O snail"
-	content := "O snail\nClimb Mount Fuji,\nBuy slowly, slowly!\n\n - Kobayashi Issa"
-	expires := "7"
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+	expires := r.PostForm.Get("expires")
 
+	// init map to hold validation errors
+	errors := make(map[string]string)
+
+	// check if title is not blank and is not more than 100 chars
+	if strings.TrimSpace(title) == "" {
+		errors["title"] = "This field cannot be blank"
+	} else if utf8.RuneCountInString(title) > 100 {
+		errors["title"] = "This field is too long (maximum is 100 characters)"
+	}
+
+	// check if content is not blank
+	if strings.TrimSpace(content) == "" {
+		errors["content"] = "This field cannot be blank"
+	}
+
+	// check if expire field is not blank and matches values 1,7,365
+	if strings.TrimSpace(expires) == "" {
+		errors["expires"] = "This field cannot be blank"
+	} else if expires != "365" && expires != "7" && expires != "1" {
+		errors["expires"] = "This field is invalid"
+	}
+
+	// if there are any errors re display create page with errors
+	if len(errors) > 0 {
+		app.render(w, r, "create.page.tmpl", &templateData{
+			FormErrors: errors,
+			FormData:   r.PostForm,
+		})
+		return
+	}
+
+	// insert data to db
 	id, err := app.snippets.Insert(title, content, expires)
 	if err != nil {
 		app.serverError(w, err)
