@@ -12,12 +12,6 @@ import (
 // home handler
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
-	// return 404 if path not found
-	if r.URL.Path != "/" {
-		app.notFound(w)
-		return
-	}
-
 	s, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(w, err)
@@ -34,7 +28,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 
 	// get id parameter and check if valid
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
@@ -56,15 +50,13 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// createSnippetForm handler
+func (app *application) createSnippetForm(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Create new snippet..."))
+}
+
 // createSnippet handler
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
-
-	// check if method is POST
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", http.MethodPost)
-		app.clientError(w, http.StatusMethodNotAllowed)
-		return
-	}
 
 	// dummy data for test
 	title := "O snail"
@@ -78,6 +70,5 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// redirect user to the created snippet
-	http.Redirect(w, r, fmt.Sprintf("/snippet?id=%d", id), http.StatusSeeOther)
-	// w.Write([]byte("Create a new snippet"))
+	http.Redirect(w, r, fmt.Sprintf("/snippet/%d", id), http.StatusSeeOther)
 }
