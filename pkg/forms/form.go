@@ -1,8 +1,10 @@
 package forms
 
 import (
+	"fmt"
 	"net/url"
 	"strings"
+	"unicode/utf8"
 )
 
 // create form struct
@@ -26,6 +28,17 @@ func (f *Form) Required(fields ...string) {
 		if strings.TrimSpace(value) == "" {
 			f.Errors.Add(field, "This field cannot be empty")
 		}
+	}
+}
+
+// implement MaxLength method
+func (f *Form) MaxLength(field string, d int) {
+	value := f.Get(field)
+	if value == "" {
+		return
+	}
+	if utf8.RuneCountInString(value) > d {
+		f.Errors.Add(field, fmt.Sprintf("This field is too long (maximum is %d characters)", d))
 	}
 }
 
