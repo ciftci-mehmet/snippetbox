@@ -19,9 +19,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// use session to show flash message
-	app.session.Put(r, "flash", "Snippet sucessfully created!")
-
 	// render using new method
 	app.render(w, r, "home.page.tmpl", &templateData{
 		Snippets: s,
@@ -89,6 +86,9 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+
+	// use session to show flash message
+	app.session.Put(r, "flash", "Snippet sucessfully created!")
 
 	// redirect user to the created snippet
 	http.Redirect(w, r, fmt.Sprintf("/snippet/%d", id), http.StatusSeeOther)
