@@ -57,5 +57,9 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 
 	// add flash message to template data if one exists
 	td.Flash = app.session.PopString(r, "flash")
+
+	// add the auth status to template data
+	td.IsAuthenticated = app.isAuthenticated(r)
+
 	return td
 }
