@@ -13,7 +13,7 @@ func (app *application) routes() http.Handler {
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 
 	// new middleware chain for dynamic application routes
-	dynamicMiddleware := alice.New(app.session.Enable)
+	dynamicMiddleware := alice.New(app.session.Enable, noSurf)
 
 	// register handlers with corresponding URL patterns using new router pat
 	mux := pat.New()
