@@ -17,6 +17,22 @@ func (app *application) about(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "about.page.tmpl", nil)
 }
 
+// user profile handler
+func (app *application) userProfile(w http.ResponseWriter, r *http.Request) {
+	userID := app.session.GetInt(r, "authenticatedUserID")
+
+	user, err := app.users.Get(userID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	// render
+	app.render(w, r, "profile.page.tmpl", &templateData{
+		User: user,
+	})
+}
+
 // home handler
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
