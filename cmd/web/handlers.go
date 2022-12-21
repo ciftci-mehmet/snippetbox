@@ -10,6 +10,13 @@ import (
 	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 )
 
+// about us handler
+func (app *application) about(w http.ResponseWriter, r *http.Request) {
+
+	// render
+	app.render(w, r, "about.page.tmpl", nil)
+}
+
 // home handler
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
