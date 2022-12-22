@@ -23,6 +23,7 @@ const contextKeyIsAuthenticated = contextKey("isAuthenticated")
 
 // define application struct that holds application wide dependencies
 type application struct {
+	debug    bool
 	errorLog *log.Logger
 	infoLog  *log.Logger
 	session  *sessions.Session
@@ -48,6 +49,8 @@ func main() {
 	dsn := flag.String("dsn", "web:pass1word@tcp(localhost:33066)/snippetbox?parseTime=true", "MySQL data source name")
 	// command line flag for session secret 32 bytes long
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
+	// debug mode to show detailed error messages
+	debug := flag.Bool("debug", false, "Enable debug mode")
 
 	// parse command line flag
 	flag.Parse()
@@ -78,6 +81,7 @@ func main() {
 
 	// application dependencies
 	app := &application{
+		debug:         *debug,
 		errorLog:      errorLog,
 		infoLog:       infoLog,
 		session:       session,
