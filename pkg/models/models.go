@@ -7,9 +7,11 @@ import (
 
 var (
 	ErrNoRecord = errors.New("models: no matching record found")
-	// invalid credentials error
-	ErrInvalidCredentials = errors.New("models: invalid crediantials")
-	// duplicate email error
+
+	// ErrInvalidCredentials invalid credentials error
+	ErrInvalidCredentials = errors.New("models: invalid credentials")
+
+	// ErrDuplicateEmail duplicate email error
 	ErrDuplicateEmail = errors.New("models: duplicate email")
 )
 

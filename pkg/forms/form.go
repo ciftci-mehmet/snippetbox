@@ -8,7 +8,7 @@ import (
 	"unicode/utf8"
 )
 
-// Use the regexp.MustCompile() function to parse a pattern and compile a
+// EmailRX Use the regexp.MustCompile() function to parse a pattern and compile a
 // regular expression for sanity checking the format of an email address.
 // This returns a *regexp.Regexp object, or panics in the event of an error.
 // Doing this once at runtime, and storing the compiled regular expression
@@ -16,13 +16,13 @@ import (
 // every request.
 var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-// create form struct
+// Form create form struct
 type Form struct {
 	url.Values
 	Errors errors
 }
 
-// create new function to init form struct
+// New create new function to init form struct
 func New(data url.Values) *Form {
 	return &Form{
 		data,
@@ -30,7 +30,7 @@ func New(data url.Values) *Form {
 	}
 }
 
-// implement required method to check if field is not blank
+// Required implement required method to check if field is not blank
 func (f *Form) Required(fields ...string) {
 	for _, field := range fields {
 		value := f.Get(field)
@@ -40,7 +40,7 @@ func (f *Form) Required(fields ...string) {
 	}
 }
 
-// MinLength
+// MinLength implement MinLength method
 func (f *Form) MinLength(field string, d int) {
 	value := f.Get(field)
 
@@ -52,7 +52,7 @@ func (f *Form) MinLength(field string, d int) {
 	}
 }
 
-// implement MaxLength method
+// MaxLength implement MaxLength method
 func (f *Form) MaxLength(field string, d int) {
 	value := f.Get(field)
 	if value == "" {
@@ -63,7 +63,7 @@ func (f *Form) MaxLength(field string, d int) {
 	}
 }
 
-// implement permitted values method to check a specifi field in the form
+// PermittedValues implement permitted values method to check a specifi field in the form
 func (f *Form) PermittedValues(field string, opts ...string) {
 	value := f.Get(field)
 	if value == "" {
@@ -78,7 +78,7 @@ func (f *Form) PermittedValues(field string, opts ...string) {
 	f.Errors.Add(field, "This field is invalid")
 }
 
-// matches pattern
+// MatchesPattern matches pattern
 func (f *Form) MatchesPattern(field string, pattern *regexp.Regexp) {
 	value := f.Get(field)
 	if value == "" {
@@ -89,7 +89,7 @@ func (f *Form) MatchesPattern(field string, pattern *regexp.Regexp) {
 	}
 }
 
-// implements a valid method to check if there are no errors
+// Valid implements a valid method to check if there are no errors
 func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
 }

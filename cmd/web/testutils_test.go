@@ -12,8 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ciftci-mehmet/snippetbox/pkg/models/mock"
 	"github.com/golangcollege/sessions"
+
+	"github.com/ciftci-mehmet/snippetbox/pkg/models/mock"
 )
 
 var csrfTokenRX = regexp.MustCompile(`<input type='hidden' name='csrf_token' value='(.+)'>`)

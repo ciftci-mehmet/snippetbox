@@ -5,16 +5,17 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 )
 
 type UserModel struct {
 	DB *sql.DB
 }
 
-// insert
+// Insert insert
 func (m *UserModel) Insert(name, email, password string) error {
 	// create bcrypt hash of the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
@@ -46,7 +47,7 @@ func (m *UserModel) Insert(name, email, password string) error {
 	return nil
 }
 
-// authenticate
+// Authenticate authenticate
 func (m *UserModel) Authenticate(email, password string) (int, error) {
 	// retrive the id and hashed pw associated with given email or return error
 	var id int
@@ -76,7 +77,7 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 	return id, nil
 }
 
-// get
+// Get get
 func (m *UserModel) Get(id int) (*models.User, error) {
 	u := &models.User{}
 

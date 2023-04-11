@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 	"github.com/justinas/nosurf"
+
+	"github.com/ciftci-mehmet/snippetbox/pkg/models"
 )
 
 func (app *application) authenticate(next http.Handler) http.Handler {
